@@ -14,12 +14,12 @@ import MenuBlock from '../components/MenuBlock.vue'
 import InfoBlock from '../components/InfoBlock.vue'
 import SliderBlock from '../components/SliderBlock.vue'
 
-
 export default {
+    name: 'MainPage',
     components: {
         MenuBlock,
         InfoBlock,
-        SliderBlock
+        SliderBlock,
     },
 
     data() {
@@ -27,8 +27,6 @@ export default {
             clicked: false
         }
     },
-
-    name: 'MainPage',
 
     methods: {
         menuOpen(value) {
