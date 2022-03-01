@@ -20,8 +20,6 @@
 
 export default {
     name: 'OrderLocation',
-    components: {
-    },
 
     data() {
         return {
