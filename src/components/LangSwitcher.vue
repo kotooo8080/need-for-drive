@@ -13,20 +13,19 @@ export default {
     data() {
         return {
             lang: "Eng",
-            val: false,
+            switcherOn: false,
         }
     },
 
     methods: {
         switchLang() {
-            if(!this.val) {
+            if(!this.switcherOn) {
                 this.lang = "Рус";
             } else {
                 this.lang = "Eng";
             }
-            this.val = !this.val;
+            this.switcherOn = !this.switcherOn;
         },
     }
-
 }
 </script>

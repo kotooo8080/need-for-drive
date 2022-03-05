@@ -1,12 +1,12 @@
 <template>
     <div class="slider img0" :class="{ sliderIfMenuOpen: clicked }" ref="slider">
-        <div class="edge" @click="buttonClick(false)">
+        <div class="edge" @click="flipSlide(false)">
             <img class="arrow-left" src="../assets/img/slider/left_arrow.svg" alt="">
         </div>
         <div class="slider-text">
             <h3> {{ expression[iteration] }} </h3>
             <h4> {{ description[iteration] }} </h4>
-            <button ref="more_details">Подробнее</button>
+            <button ref="moreDetails">Подробнее</button>
             <div class="circles" ref="circles">
                 <div class="active-circle"></div>
                 <div class=""></div>
@@ -14,7 +14,7 @@
                 <div class=""></div>
             </div>
         </div>
-        <div class="edge" @click="buttonClick(true)">
+        <div class="edge" @click="flipSlide(true)">
             <img class="arrow-right" src="../assets/img/slider/right_arrow.svg" alt="">
         </div>
     </div>
@@ -64,51 +64,59 @@ export default {
         }
     },
 
+    mounted() {
+        this.flippingSlider();
+    },
+
     methods: {
         changeClasses(indx) {
             this.$refs.slider.className = `slider img${indx} ${this.clicked ? 'sliderIfMenuOpen' : ''}`;
-            this.$refs.more_details.style.background = this.buttonColors[indx];
+            this.$refs.moreDetails.style.background = this.buttonColors[indx];
             this.$refs.circles.children[indx].classList.add("active-circle");
         },
 
         flipSlideRight() {
-            if(this.times > 1 && this.iteration === 4) {
-                this.$refs.circles.children[this.images.length - 1].classList.remove("active-circle");
-            }
-            else {
-                this.$refs.circles.children[this.iteration].classList.remove("active-circle");
-            }
-            
-            if(this.iteration < 3) {
-                this.iteration++;
-            }
-            else {
-                this.iteration = 0;
-            }
+            if(this.$refs.circles) {
+                if(this.times > 1 && this.iteration === 4) {
+                    this.$refs.circles.children[this.images.length - 1].classList.remove("active-circle");
+                }
+                else {
+                    this.$refs.circles.children[this.iteration].classList.remove("active-circle");
+                }
+                
+                if(this.iteration < 3) {
+                    this.iteration++;
+                }
+                else {
+                    this.iteration = 0;
+                }
 
-            this.changeClasses(this.iteration);
+                this.changeClasses(this.iteration);
+            }
         },
 
         flipSlideLeft() {
-            if(this.times > 1 && this.iteration === 0) {
-                this.$refs.circles.children[0].classList.remove("active-circle");
-            }
-            else {
-                this.$refs.circles.children[this.iteration].classList.remove("active-circle");
-            }
+            if(this.$refs.circles) {
+                if(this.times > 1 && this.iteration === 0) {
+                    this.$refs.circles.children[0].classList.remove("active-circle");
+                }
+                else {
+                    this.$refs.circles.children[this.iteration].classList.remove("active-circle");
+                }
 
-            if(this.iteration > 0) {
-                this.iteration--;
-            }
-            else {
-                this.iteration = 3;
-            }
+                if(this.iteration > 0) {
+                    this.iteration--;
+                }
+                else {
+                    this.iteration = 3;
+                }
 
-            this.changeClasses(this.iteration);
+                this.changeClasses(this.iteration);
+            }
         },
 
-        buttonClick(leftOrRight) {
-            if (leftOrRight) {
+        flipSlide(isLeft) {
+            if (isLeft) {
                 this.flipSlideRight();
             } else {
                 this.flipSlideLeft();
@@ -124,11 +132,10 @@ export default {
             }).bind(this)
 
             this.sliderInterval = setInterval(flipper, 5000);
+            if(this.times > 10) {
+                clearInterval(this.sliderInterval);
+            }
         }
     },
-
-    mounted() {
-        this.flippingSlider();
-    }
 }
 </script>
