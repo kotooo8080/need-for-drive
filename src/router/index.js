@@ -13,7 +13,7 @@ const routes = [
         path: '/order',
         name: 'OrderPage',
         component: OrderPage
-    }
+    },
 ];
 
 const router = createRouter({
