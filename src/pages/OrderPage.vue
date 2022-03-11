@@ -1,12 +1,21 @@
 <template>
     <div class="order-page">
         <menu-block @menu-click="menuOpen"/>
-        <div class="order" :class="{ pageInfoIfMenuOpen: clicked }">
+        <div 
+            class="order" 
+            :class="{ pageInfoIfMenuOpen: clicked }"
+        >
             <page-header/>
-            <tabs-block @selectedTabIndx='choiceComponent' :pageIndx="componentIndx"/>
+            <tabs-block  
+                :pageIndx="componentIndx"
+                @selectedTabIndx='choiceComponent'
+            />
             <div class="order-info" >
                 <keep-alive><component :is="selectedComponent"></component></keep-alive>
-                <order-calc @nextPage="choiceComponent" :pageIndx="componentIndx"/>
+                <order-calc 
+                    :pageIndx="componentIndx"
+                    @nextPage="choiceComponent" 
+                />
             </div>
         </div>
     </div>

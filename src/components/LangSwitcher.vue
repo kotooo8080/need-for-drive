@@ -1,6 +1,9 @@
 <template>
     <div class="lang">
-        <button class="lang-button" v-on:click="switchLang()">
+        <button 
+            class="lang-button" 
+            @click="switchLang()"
+        >
             <h4 class="green">{{ lang }}</h4>
         </button>
     </div>

@@ -4,7 +4,10 @@
             <h3>{{ model }}</h3>
             <h4>{{ price }}</h4>
         </div>
-        <img :src="require(`../assets/img/cars/${photo}`)" alt="">
+        <img 
+            :src="require(`../assets/img/cars/${photo}`)" 
+            alt=""
+        >
     </div>
 </template>
 

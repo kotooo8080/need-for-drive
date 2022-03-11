@@ -6,7 +6,10 @@
             <h4><span>Топливо </span>100%</h4>
             <h4><span>Доступно с </span>12.06.2019 12:00</h4>
         </div>
-        <img :src="require(`../assets/img/cars/${totalCarPhoto}`)" alt="">
+        <img 
+            :src="require(`../assets/img/cars/${totalCarPhoto}`)" 
+            alt=""
+        >
     </div>
 </template> 
 

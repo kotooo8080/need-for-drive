@@ -3,17 +3,21 @@
         <div class="color">
             <p>Цвет</p>
             <div class="colors">
-                <div>
-                    <input type="radio" id="any" name="radio1" value="any" v-model="activeColor" checked>
-                    <label :class="{ 'active-label': activeColor === 'any' }" for="any">Любой</label>
-                </div>
-                <div>
-                    <input type="radio" id="red" name="radio1" value="red" v-model="activeColor">
-                    <label :class="{ 'active-label': activeColor === 'red' }" for="red">Красный</label>
-                </div>
-                <div>
-                    <input type="radio" id="blue" name="radio1" value="blue" v-model="activeColor">
-                    <label :class="{ 'active-label': activeColor === 'blue' }" for="blue">Голубой</label>
+                <div
+                    v-for="color in colors" 
+                    :key="color.name"
+                >
+                    <input 
+                        :id=color.name
+                        v-model="activeColor"
+                        type="radio"
+                        name="radio1" 
+                        :value=color.name
+                    >
+                    <label 
+                        :for=color.name
+                        :class="{ 'active-label': activeColor === color.name }" 
+                    >{{ color.rusName }}</label>
                 </div>
             </div>
         </div>
@@ -22,51 +26,76 @@
             <div class="start">
                 <h3>С</h3>
                 <div class="input-block">
-                    <input type="search" v-model="startValue">
-                    <button class="close" @click="startValue = ''"></button>
+                    <input 
+                        v-model="startDateTime"
+                        type="search" 
+                    >
+                    <button 
+                        class="close" 
+                        @click="startDateTime = ''"
+                    ></button>
                 </div>
             </div>
             <div class="end">
                 <h3>По</h3>
                 <div class="input-block">
-                    <input type="search" v-model="endValue" @focus="endValue = ''" @focusout="valChecker">
-                    <button class="close" @click="endValue = ''"></button>
+                    <input 
+                        v-model="endDateTime"
+                        type="search"  
+                        @focus="endDateTime = ''" 
+                        @focusout="valChecker"
+                    >
+                    <button 
+                        class="close" 
+                        @click="endDateTime = ''"
+                    ></button>
                 </div>
             </div>
         </div>
         <div class="tariff">
             <p>Тариф</p>
-            <div>
-                <input type="radio" id="tar1" name="radio" value="tar1" v-model="activeTariff" checked>
-                <label :class="{ 'active-label': activeTariff === 'tar1' }" for="tar1">Поминутно, 7₽/мин</label>
-            </div>
-            <div>
-                <input type="radio" id="tar2" name="radio" value="tar2" v-model="activeTariff">
-                <label :class="{ 'active-label': activeTariff === 'tar2' }" for="tar2">На сутки, 1999₽/сутки</label>
+            <div
+                v-for="tariff in tariffs" 
+                :key="tariff.name"
+            >
+                <input 
+                    :id=tariff.name
+                    v-model="activeTariff"
+                    type="radio"  
+                    name="radio" 
+                    :value=tariff.name  
+                >
+                <label 
+                    :for=tariff.name
+                    :class="{ 'active-label': activeTariff === tariff.name }" 
+                >{{ tariff.description }}</label>
             </div>
         </div>
         <div class="add-services">
             <p>Доп услуги</p>
-            <div class="option">
+            <div 
+                v-for="service in services" 
+                :key="service.name"
+                class="option"
+            >
                 <div class="input-block">
-                    <input type="checkbox" id="ch1" name="checkbox" value="ch1" v-model="checkedServices" checked>
-                    <img v-if="checkedServices.indexOf('ch1') + 1" src="../assets/img/checked.svg" alt="">
+                    <input 
+                        :id=service.name 
+                        v-model="checkedServices" 
+                        type="checkbox" 
+                        name="checkbox" 
+                        :value=service.name
+                    >
+                    <img 
+                        v-if="serviceCheck(service.name)" 
+                        src="../assets/img/checked.svg" 
+                        alt=""
+                    >
                 </div>
-                <label :class="{ 'active-label': checkedServices.indexOf('ch1') + 1 }" for="ch1">Полный бак, 500₽</label>
-            </div>
-            <div class="option">
-                <div class="input-block">
-                    <input type="checkbox" id="ch2" name="checkbox" value="ch2" v-model="checkedServices">
-                    <img v-if="checkedServices.indexOf('ch2') + 1" src="../assets/img/checked.svg" alt="">
-                </div>
-                <label :class="{ 'active-label': checkedServices.indexOf('ch2') + 1 }" for="ch2">Детское кресло, 200₽</label>
-            </div>
-            <div class="option">
-                <div class="input-block">
-                    <input type="checkbox" id="ch3" name="checkbox" value="ch3" v-model="checkedServices">
-                    <img v-if="checkedServices.indexOf('ch3') + 1" src="../assets/img/checked.svg" alt="">
-                </div>
-                <label :class="{ 'active-label': checkedServices.indexOf('ch3') + 1 }" for="ch3">Правый руль, 1600₽</label>
+                <label 
+                    :for=service.name
+                    :class="{ 'active-label': serviceCheck(service.name)}" 
+                >{{ service.description }}</label>
             </div>
         </div>
     </div>
@@ -79,12 +108,35 @@ export default {
 
     data() {
         return {
-            startValue: '12.06.2019 12:00',
-            endValue: 'Введите дату и время',
+            startDateTime: '12.06.2019 12:00',
+            endDateTime: 'Введите дату и время',
             activeColor: 'any',
             activeTariff: 'tar1',
-            checkedServices: []
+            checkedServices: [],
+
+            colors: [
+                { name: 'any', rusName: 'Любой' },
+                { name: 'red', rusName: 'Красный' },
+                { name: 'blue', rusName: 'Голубой' }
+            ],
+
+            tariffs: [
+                { name: 'tar1', description: 'Поминутно, 7₽/мин' },
+                { name: 'tar2', description: 'На сутки, 1999₽/сутки' }
+            ],
+
+            services: [
+                { name: 'ch1', description: 'Полный бак, 500₽' },
+                { name: 'ch2', description: 'Детское кресло, 200₽' },
+                { name: 'ch3', description: 'Правый руль, 1600₽' }
+            ]
         }
     },
+
+    methods: {
+        serviceCheck(servName) {
+            return (this.checkedServices.indexOf(servName) + 1);
+        }
+    }
 }
 </script>

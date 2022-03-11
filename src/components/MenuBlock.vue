@@ -1,13 +1,24 @@
 <template>
-    <div class="menu" :class="{ 'open-menu': toggleValue }">
-        <div class="lines" :class="{ open: toggleValue }" @click="toggleVisibilityLangSwitcher()">
+    <div 
+        class="menu" 
+        :class="{ 'open-menu': toggleValue }"
+    >
+        <div 
+            class="lines" 
+            :class="{ open: toggleValue }" 
+            @click="toggleVisibilityLangSwitcher()"
+        >
             <div class="first_line"></div>
             <div class="mid"></div>
             <div class="third_line"></div>
         </div>
-        <div class="menu-items" @click="toggleVisibilityLangSwitcher()">
+        <div 
+            class="menu-items" 
+            @click="toggleVisibilityLangSwitcher()"
+        >
             <router-link
-                v-for="(item, indx) in items" :key="`menu-item-${indx}`" 
+                v-for="item in items" 
+                :key=item.id 
                 tag="a"
                 :to="item.linkText"
             >
@@ -38,10 +49,10 @@ export default {
             toggleValue: false,
             
             items: [
-                { linkText: '/', itemText: 'Парковка' },
-                { linkText: '/', itemText: 'Страховка' },
-                { linkText: '/', itemText: 'Бензин' },
-                { linkText: '/', itemText: 'Обслуживание' },
+                { id: 'parking', linkText: '/', itemText: 'Парковка' },
+                { id: 'insurance', linkText: '/', itemText: 'Страховка' },
+                { id: 'petrol', linkText: '/', itemText: 'Бензин' },
+                { id: 'serv', linkText: '/', itemText: 'Обслуживание' },
             ]
         }
     },

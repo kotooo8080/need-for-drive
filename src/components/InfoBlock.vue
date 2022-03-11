@@ -1,6 +1,12 @@
 <template>
-    <div class="info" :class="{ infoIfMenuOpen: clicked }">
-        <div v-if="screenWidthChecker()" class="info-header">
+    <div 
+        class="info" 
+        :class="{ infoIfMenuOpen: clicked }"
+    >
+        <div 
+            v-if="screenWidthChecker()" 
+            class="info-header"
+        >
             <div class="row">
                 <h3 class="green">Need for drive</h3>
                 <location-choice />
