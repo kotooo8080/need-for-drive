@@ -5,7 +5,6 @@
             <div class="location-input">
                 <input 
                     v-model="locationName"
-                    type="search" 
                 >
                 <button 
                     class="close" 

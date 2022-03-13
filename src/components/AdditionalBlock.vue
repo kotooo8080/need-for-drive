@@ -28,7 +28,6 @@
                 <div class="input-block">
                     <input 
                         v-model="startDateTime"
-                        type="search" 
                     >
                     <button 
                         class="close" 
@@ -41,7 +40,6 @@
                 <div class="input-block">
                     <input 
                         v-model="endDateTime"
-                        type="search"  
                         @focus="endDateTime = ''" 
                         @focusout="valChecker"
                     >

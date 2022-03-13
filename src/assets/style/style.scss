@@ -713,7 +713,7 @@ input[type=checkbox]:checked {
         margin: 8px 0;
 
         input {
-            width: 224px;
+            width: 214px;
             color: $main-black;
         }
         p {
@@ -863,7 +863,7 @@ input[type=checkbox]:checked {
                 input, textarea {
                     outline:none;
                 }
-            
+
                 input:focus {
                     border-bottom: 2px solid $main-color;
                 }
@@ -921,7 +921,7 @@ input[type=checkbox]:checked {
                 font-size: 14px;
                 line-height: 16px;
 
-                width: 224px;
+                width: 214px;
                 padding-left: 8px;
                 padding-bottom: 5px;
             }
