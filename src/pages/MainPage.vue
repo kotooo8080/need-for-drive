@@ -1,7 +1,10 @@
 <template>
     <div class="main-page">
         <menu-block @menu-click="menuOpen"/>
-        <div class="page-info" :class="{ pageInfoIfMenuOpen: clicked }">
+        <div 
+            class="page-info" 
+            :class="{ pageInfoIfMenuOpen: clicked }"
+        >
             <info-block :clicked="clicked" />
             <slider-block :clicked="clicked" />
         </div>

@@ -1,6 +1,13 @@
 <template>
-    <div class="slider img0" :class="{ sliderIfMenuOpen: clicked }" ref="slider">
-        <div class="edge" @click="flipSlide(false)">
+    <div 
+        ref="slider"
+        class="slider img0" 
+        :class="{ sliderIfMenuOpen: clicked }" 
+    >
+        <div 
+            class="edge" 
+            @click="flipSlide(false)"
+        >
             <img class="arrow-left" src="../assets/img/slider/left_arrow.svg" alt="">
         </div>
         <div class="slider-text">
@@ -14,7 +21,10 @@
                 <div class=""></div>
             </div>
         </div>
-        <div class="edge" @click="flipSlide(true)">
+        <div 
+            class="edge" 
+            @click="flipSlide(true)"
+        >
             <img class="arrow-right" src="../assets/img/slider/right_arrow.svg" alt="">
         </div>
     </div>
