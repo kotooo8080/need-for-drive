@@ -43,7 +43,7 @@ export default {
             if(this.pointName == '') {
                 this.pointName = "Начните вводить пункт ...";
             }
-        }
+        },
     }
 }
 </script>

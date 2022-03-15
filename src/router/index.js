@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 
 import MainPage from '../pages/MainPage.vue'
 import OrderPage from '../pages/OrderPage.vue'
+import FinalPage from '../pages/FinalPage.vue'
 
 const routes = [
     {
@@ -13,6 +14,11 @@ const routes = [
         path: '/order',
         name: 'OrderPage',
         component: OrderPage
+    },
+    {
+        path: '/final',
+        name: 'FinalPage',
+        component: FinalPage
     },
 ];
 

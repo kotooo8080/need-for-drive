@@ -620,6 +620,19 @@ input[type=checkbox]:checked {
         }
     }
 
+    .order-number {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        padding-left: 64px;
+        border-bottom:  1px solid $light-gray;
+
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 16px;
+    }
+
     .tabs {
         width: calc(100% - 64px);
         padding: 8px 0px 8px 64px;
@@ -820,11 +833,65 @@ input[type=checkbox]:checked {
     }
 }
 
+.confirmation-window {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+
+    h3 {
+        font-weight: normal;
+        font-size: 24px;
+        line-height: 28px;
+        margin: 0;
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        .ok {
+            background: linear-gradient(90deg, $main-color 2.61%, #039F67 112.6%);
+            background-blend-mode: darken;
+            width: 177px;
+            height: 48px;
+            margin-right: 16px;
+        }
+
+        .cancel {
+            background: linear-gradient(90deg, #493013 0%, #7B0C3B 100%);
+            width: 164px;
+            height: 48px;
+        }
+
+
+        button {
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 21px;
+        }
+    }
+}
+
 .additional-block {
     width: 72%;
     padding: 32px 64px;
     font-style: normal;
     font-weight: 300;
+    border-right: 1px solid $light-gray;
 
     p {
         margin-top: 0;
@@ -1001,6 +1068,7 @@ input[type=checkbox]:checked {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    border-right: 1px solid $light-gray;
 
     h3 {
         font-style: normal;
@@ -1140,6 +1208,10 @@ input[type=checkbox]:checked {
     .active-button {
         background: linear-gradient(90deg, $main-color 2.61%, #039F67 112.6%);
         background-blend-mode: darken;
+    }
+
+    .cancelButton {
+        background: linear-gradient(90deg, #493013 0%, #7B0C3B 100%);
     }
 
     .disabled-button {
@@ -1334,6 +1406,41 @@ input[type=checkbox]:checked {
     }
 }
 
+@media ( max-width: 810px ) {
+    .confirmation-window {
+        justify-content: flex-start;
+
+        h3 {
+            margin-top: 300px;
+        }
+    }
+
+    .order-page {
+        .order {
+            .order-info {
+                .car-model {
+                    width: 50%;
+
+                    .products {
+                        .product-card {
+                            width: 300px;
+                        }
+                    }
+                }
+
+                .total-block {
+                    flex-wrap: wrap;
+                }
+
+                .order-calculation {
+                    width: 50%;
+                }
+            }
+        }
+    }
+}
+
+
 @media ( max-width: 767px ) {
     .menu {
         position: absolute;
@@ -1371,10 +1478,14 @@ input[type=checkbox]:checked {
             .lines {
                 width: 22px;
                 margin: 0;
+                margin-top: 22.5px;
+                margin-left: 22px;
 
                 .first_line, .third_line{
-                    top: 32px;
-                    left: 8px;
+                    top: 11px;
+                    left: 0;
+                    //top: 32px;
+                    //left: 8px;
                 }
 
                 div {
@@ -1402,6 +1513,10 @@ input[type=checkbox]:checked {
 
         .order {
             width: 100%;
+
+            .order-number {
+                padding-left: 32px;
+            }
 
             .tabs-block {
                 width: 100%;
@@ -1448,6 +1563,10 @@ input[type=checkbox]:checked {
                     width: calc(100% - 32px);
                     border: none;
                     padding: 32px;
+
+                    .products {
+                        justify-content: center;
+                    }
                 }
 
                 .additional-block {
@@ -1462,6 +1581,29 @@ input[type=checkbox]:checked {
                     img {
                         width: 180px;
                         height: 82px;
+                        margin-top: 32px;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                }
+
+                .order-calculation {
+                    width: calc(100% - 32px);
+                    padding: 8px 32px 48px 32px;
+    
+                    p {
+                        margin-top: 8px;
+                        margin-bottom: 8px;
+                    }
+    
+                    h5 {
+                        margin-top: 8px;
+                    }
+    
+                    .price-block {
+                        p {
+                            margin-top: 1px;
+                        }
                     }
                 }
             }
@@ -1479,7 +1621,7 @@ input[type=checkbox]:checked {
 
                 .point-of-issue {
                     input {
-                        width: 170px;
+                        width: 180px;
                     }
                 }
 
@@ -1488,25 +1630,25 @@ input[type=checkbox]:checked {
                 }
             }
 
-            .order-calculation {
-                width: 100%;
-                padding: 8px 16px 48px 16px;
+            // .order-calculation {
+            //     width: 100%;
+            //     padding: 8px 16px 48px 16px;
 
-                p {
-                    margin-top: 8px;
-                    margin-bottom: 8px;
-                }
+            //     p {
+            //         margin-top: 8px;
+            //         margin-bottom: 8px;
+            //     }
 
-                h5 {
-                    margin-top: 8px;
-                }
+            //     h5 {
+            //         margin-top: 8px;
+            //     }
 
-                .price-block {
-                    p {
-                        margin-top: 1px;
-                    }
-                }
-            }
+            //     .price-block {
+            //         p {
+            //             margin-top: 1px;
+            //         }
+            //     }
+            // }
 
             .page-header {
                 padding: 16px;
@@ -1536,6 +1678,15 @@ input[type=checkbox]:checked {
 
         .menu {
             position: absolute;
+        }
+
+        .confirmation-window {
+            width: calc(100% + 32px);
+            height: calc(100% + 64px);
+
+            h3 {
+                margin-top: 250px;
+            }
         }
     }
 

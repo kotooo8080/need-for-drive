@@ -1,5 +1,8 @@
 <template>
-    <div class="order-page">
+    <div 
+        class="order-page" 
+        :class="{ 'confirmOpen': confirmOrder }" 
+    >
         <menu-block @menu-click="menuOpen"/>
         <div 
             class="order" 
@@ -15,9 +18,11 @@
                 <order-calc 
                     :pageIndx="componentIndx"
                     @nextPage="choiceComponent" 
+                    @confirmOrder="confirmOrder = true"
                 />
             </div>
         </div>
+        <confirmation-window v-if="confirmOrder" @closeConfirm="confirmOrder = false"/>
     </div>
 </template>
 
@@ -30,6 +35,7 @@ import PageHeader from '../components/PageHeader.vue'
 import CarModel from '../components/CarModel.vue'
 import AdditionalBlock from '../components/AdditionalBlock.vue'
 import TotalBlock from '../components/TotalBlock.vue'
+import ConfirmationWindow from '../components/ConfirmationWindow.vue'
 
 export default {
     name: 'OrderPage',
@@ -43,7 +49,8 @@ export default {
         OrderLocation,
         CarModel,
         AdditionalBlock,
-        TotalBlock
+        TotalBlock,
+        ConfirmationWindow
     },
 
     data() {
@@ -56,7 +63,8 @@ export default {
                 "AdditionalBlock",
                 "TotalBlock"
             ],
-            componentIndx: 0
+            componentIndx: 0,
+            confirmOrder: false
         }
     },
 
@@ -71,7 +79,7 @@ export default {
             if(data) {
                 this.componentIndx = data.index;
             }
-        }
+        },
     },
 }
 </script>
