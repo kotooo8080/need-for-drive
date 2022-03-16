@@ -7,7 +7,7 @@
             <h5 class="item-value address">Ульяновск, Нариманова 42</h5>
         </div>
         <div 
-            v-if="pageIndx >= 1" 
+            v-if="pageIndx >= 1 || finalOrderInfo" 
             class="order-model with-dots"
         >
             <h5 class="item-name">Модель</h5>
@@ -15,7 +15,7 @@
             <h5 class="item-value">Hyndai i30 N</h5>
         </div>
         <div 
-            v-if="pageIndx >= 2" 
+            v-if="pageIndx >= 2 || finalOrderInfo" 
             class="car-color with-dots"
         >
             <h5 class="item-name">Цвет</h5>
@@ -23,7 +23,7 @@
             <h5 class="item-value">Голубой</h5>
         </div>
         <div 
-            v-if="pageIndx >= 2" 
+            v-if="pageIndx >= 2 || finalOrderInfo" 
             class="rental-duration with-dots"
         >
             <h5 class="item-name">Длительность аренды</h5>
@@ -31,7 +31,7 @@
             <h5 class="item-value">1д2ч</h5>
         </div>
         <div 
-            v-if="pageIndx >= 2" 
+            v-if="pageIndx >= 2 || finalOrderInfo" 
             class="order-tariff with-dots"
         >
             <h5 class="item-name">Тариф</h5>
@@ -39,7 +39,7 @@
             <h5 class="item-value">На сутки</h5>
         </div>
         <div 
-            v-if="pageIndx >= 2" 
+            v-if="pageIndx >= 2 || finalOrderInfo" 
             class="add-options with-dots"
         >
             <h5 class="item-name">Полный бак</h5>
@@ -52,9 +52,16 @@
             <h4>от 8000 до 12000 ₽</h4>
         </div>
         <button 
-            @click="displayNextPage" 
+            v-if="!finalOrderInfo" 
             class="active-button"
+            @click="displayNextPage"
         >{{ buttonNames[pageIndx] }}</button>
+        <button 
+            v-else 
+            class="active-button"
+            :class="{ cancelButton: finalOrderInfo }"
+            @click="$router.push('/order')"
+        >{{ 'Отменить' }}</button>
     </div>
 </template>
 
@@ -66,7 +73,8 @@ export default {
     },
 
     props: {
-        pageIndx: Number
+        pageIndx: Number,
+        finalOrderInfo: Boolean
     },
 
     data() {
@@ -76,7 +84,7 @@ export default {
                 'Дополнительно',
                 'Итого',
                 'Заказать'
-            ]
+            ],
         }
     },
     
@@ -84,6 +92,8 @@ export default {
         displayNextPage() {
             if(this.pageIndx < 3) {
                 this.$emit('nextPage', { index: this.pageIndx + 1 });
+            } else {
+                this.$emit('confirmOrder');
             }
         }
     },
