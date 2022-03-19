@@ -12,6 +12,7 @@ import LocationChoice from '../components/LocationChoice.vue'
 
 export default {
     name: 'PageHeader',
+    
     components: {
         LocationChoice,
     }

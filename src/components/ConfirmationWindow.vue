@@ -19,11 +19,6 @@
 export default {
     name: 'ConfirmationWindow',
 
-    data() {
-        return {
-        }
-    },
-
     methods: {
         closeConfirm() {
             this.$emit('closeConfirm', false);
