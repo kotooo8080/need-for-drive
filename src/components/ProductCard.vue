@@ -5,7 +5,7 @@
             <h4>{{ price }}</h4>
         </div>
         <img 
-            :src="require(`../assets/img/cars/${photo}`)" 
+            :src="photo" 
             alt=""
         >
     </div>
