@@ -71,7 +71,7 @@
                 <label 
                     :for=tariff.name
                     :class="{ 'active-label': activeTariff === tariff.name }" 
-                >{{ tariff.description }}{{ tariff.tarPrice }}</label>
+                >{{ tariff.description }}, {{ tariff.tarPrice }}₽/{{ tariff.timeValue }}</label>
             </div>
         </div>
         <div class="add-services">
@@ -109,27 +109,33 @@
 export default {
     name: 'AdditionalBlock',
 
+    props: {
+        newColors: Array
+    },
+
     data() {
         return {
             startDateTime: 'Введите дату и время',
             endDateTime: 'Введите дату и время',
-            activeColor: sessionStorage.getItem('active-color') || 'any',
-            activeTariff: sessionStorage.getItem('active-tariff')|| 'tar1',
-            checkedServices: ['ch1'],
+            activeColor: sessionStorage.getItem('active-color') || 'col0',
+            activeTariff: sessionStorage.getItem('active-tariff')|| 'tar0',
+            checkedServices: [],
             dateFilled: false,
             startNotValid: false,
             endNotValid: true,
             allDataValid: false,
+            rates: [],
+            calculatedPrice: 0,
 
             colors: [
-                { name: 'any', rusName: 'Любой' },
-                { name: 'red', rusName: 'Красный' },
-                { name: 'blue', rusName: 'Голубой' }
+                { name: 'col0', rusName: 'Любой' },
+                { name: 'col1', rusName: 'Красный' },
+                { name: 'col2', rusName: 'Голубой' }
             ],
 
             tariffs: [
-                { name: 'tar1', description: 'Поминутно', tarPrice: ', 7₽/мин' },
-                { name: 'tar2', description: 'На сутки', tarPrice: ', 1999₽/сутки' }
+                { name: 'tar0', description: 'Поминутно', tarPrice: '7', timeValue: 'мин' },
+                { name: 'tar1', description: 'На сутки', tarPrice: '1999', timeValue: 'сутки' }
             ],
 
             services: [
@@ -148,29 +154,102 @@ export default {
         endDateTime: function() {
             this.validateDateAndTime(this.endDateTime, false);
         },
+
+        newColors: function() {
+            if(this.newColors && this.newColors.length) {
+                this.colors = [];
+                this.newColors.forEach((el, indx) => {
+                    this.colors[indx] = { name: 'col' + indx, rusName: el };
+                });
+            }
+        }
     },
 
     created() {
+        this.getRate();
+
         let date = new Date();
         let dayMonthYear = String(date.getDate()).padStart(2, '0') + '.' + String(date.getMonth() + 1).padStart(2, '0') + '.' + date.getFullYear();
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
+        let hours = date.getHours().toString();
+        let minutes = date.getMinutes().toString();
 
         if(minutes.length === 1) {
             minutes = '0' + minutes;
+        }
+        if(hours.length === 1) {
+            hours = '0' + hours;
         }
         this.startDateTime = dayMonthYear + ' ' + hours + ':' + minutes;
 
         let savedEndDate = sessionStorage.getItem('end-date');
         if(savedEndDate) this.endDateTime = savedEndDate;
-
         let chServ = sessionStorage.getItem('checked-services');
         if(chServ) {
             this.checkedServices = chServ.split(',');
         }
+
+        let colors = sessionStorage.getItem('car-colors').split(',');
+        colors.forEach((el, indx) => {
+            this.colors[indx] = { name: 'col' + indx, rusName: el };
+        });
     },
 
     methods: {
+        getRate() {
+            this.axios.get('https://api-factory.simbirsoft1.com/api/db/rate', {
+                headers: {
+                    'X-Api-Factory-Application-Id': '5e25c641099b810b946c5d5b'
+                }
+            }).then((response) => {
+                let receivedRates = response.data.data;
+                if(receivedRates) {
+                    this.tariffs = [];
+                    receivedRates.forEach((el, indx) => {
+                        if(receivedRates[indx].rateTypeId) {
+                            this.tariffs[indx] = { name: 'tar' + indx, description: receivedRates[indx].rateTypeId.name, tarPrice: receivedRates[indx].price, timeValue: receivedRates[indx].rateTypeId.unit };
+                        }
+                    });
+                }
+                this.calculateFinalPrice();
+            });
+        },
+
+        calculateFinalPrice() {
+            let durationStr = sessionStorage.getItem('duration');
+            if(durationStr) {
+                let days = parseInt(durationStr.split('д')[0]),
+                    hours = parseInt(durationStr.split('д')[1]),
+                    durationInHours = days*24 + hours,
+                    tariff = (this.tariffs.find(el => el.name == this.activeTariff)) || this.tariffs[0],
+                    tariffDescription = tariff.description;
+
+                this.calculatedPrice = 0;
+                let price = parseInt(tariff.tarPrice);
+
+                if(tariffDescription.toLowerCase().includes('минут')) {
+                    this.calculatedPrice += durationInHours*60*price;
+                } else if(tariffDescription.toLowerCase().includes('час')) {
+                    this.calculatedPrice += durationInHours*price;
+                } else if(tariffDescription.toLowerCase().includes('сут')) {
+                    this.calculatedPrice += Math.ceil((durationInHours/24))*price;
+                } else if(tariffDescription.toLowerCase().includes('недел')) {
+                    this.calculatedPrice += Math.ceil((durationInHours/24/7))*price;
+                } else if(tariffDescription.toLowerCase().includes('мес')) {
+                    this.calculatedPrice += Math.ceil((durationInHours/24/30))*price;
+                } else if(tariffDescription.toLowerCase().includes('год')) {
+                    this.calculatedPrice += Math.ceil((durationInHours/24/365))*price;
+                }
+
+                let servicesPrice = 0;
+                this.checkedServices.forEach(chServ => {
+                    servicesPrice += parseInt(this.services.find(serv => serv.name == chServ).servPrice.match(/\d+/))
+                });
+                this.calculatedPrice += servicesPrice;
+                sessionStorage.setItem('car-price', this.calculatedPrice);
+                this.$emit('finalPrice', { price: this.calculatedPrice });
+            }
+        },
+
         serviceCheck(servName) {
             return (this.checkedServices.indexOf(servName) + 1);
         },
@@ -181,14 +260,19 @@ export default {
             }
             if(dataName === 'service') {
                 let servData = {};
-                for(let i = 0; i < this.checkedServices.length; i++) {
-                    servData[this.checkedServices[i]] = (this.services.find((item) => item.name == this.checkedServices[i])).description;
+                if(this.checkedServices.length) {
+                    for(let i = 0; i < this.checkedServices.length; i++) {
+                        servData[this.checkedServices[i]] = (this.services.find((item) => item.name == this.checkedServices[i])).description;
+                    }
+                    if (Object.keys(servData).length !== 0) {
+                        sessionStorage.setItem('services', (Object.values(servData)).join(','));
+                        sessionStorage.setItem('checked-services', (Object.keys(servData)).join(','));
+                    }
+                } else {
+                    sessionStorage.setItem('services', '');
+                    sessionStorage.setItem('checked-services', '');
                 }
                 this.$emit('componentData', { services: servData });
-                if (Object.keys(servData).length !== 0) {
-                    sessionStorage.setItem('services', (Object.values(servData)).join(','));
-                    sessionStorage.setItem('checked-services', (Object.keys(servData)).join(','));
-                }
             }
             else {
                 sessionStorage.setItem(dataName, dataValue);
@@ -196,6 +280,7 @@ export default {
                 this.$emit('componentChanged');
             }
             sessionStorage.setItem('current-tab', 2);
+            this.calculateFinalPrice();
         },
 
         inputNameCheck(startOrEnd, result) {
@@ -215,19 +300,18 @@ export default {
                 let arrD = date.split(".");
                 arrD[1] -= 1;
                 let d = new Date(arrD[2], arrD[1], arrD[0]);
-                if (!((d.getFullYear() == arrD[2]) && (d.getMonth() == arrD[1]) && (d.getDate() == arrD[0]) && arrD[2] >= (new Date()).getFullYear() && arrD[1] >= (new Date()).getMonth() && arrD[0] >= (new Date()).getDate())) {
+                //if (!((d.getFullYear() == arrD[2]) && (d.getMonth() == arrD[1]) && (d.getDate() == arrD[0]) && arrD[2] >= (new Date()).getFullYear() && arrD[1] >= (new Date()).getMonth() && arrD[0] >= (new Date()).getDate())) {
+                if(!((d.getFullYear() == arrD[2]) && (d.getMonth() >= arrD[1])) && (d.getFullYear() < arrD[2])) {
                     this.inputNameCheck(startOrEnd, true);
                 } else {
                     this.inputNameCheck(startOrEnd, false);
                 }
-
                 if(!(/(([2][0-3])|([0-1][0-9])):([0-5][0-9])/.test(time) && time.split(':')[0] < 24 && time.split(':')[1] < 60 )) {
                     this.inputNameCheck(startOrEnd, true);
                 }
             } else {
                 this.inputNameCheck(startOrEnd, true);
             }
-
             if(!this.startNotValid && !this.endNotValid) {
                 this.calculateDuration();
             }
@@ -258,7 +342,9 @@ export default {
             this.$emit('componentChanged');
             sessionStorage.setItem('duration', duration );
             sessionStorage.setItem('start-date', startInpData);
-            sessionStorage.setItem('end-date', endInpData)
+            sessionStorage.setItem('end-date', endInpData);
+
+            this.calculateFinalPrice();
         }
     },
 }

@@ -76,7 +76,8 @@ export default {
         pageIndx: Number,
         finalOrderInfo: Boolean,
         refreshDataInCalc: Object,
-        activateButton: Boolean
+        activateButton: Boolean,
+        calcPrice: Object
     },
 
     data() {
@@ -94,40 +95,11 @@ export default {
             color: 'Любой',
             duration: '1д2ч',
             tariff: 'Поминутно',
-            services: ['Полный бак'],
+            services: [],
             price: 'от 8000 до 12000 ₽',
 
             orderCalcData: new Map(),
             filledOrderData: -1
-        }
-    },
-
-    watch: {
-        refreshDataInCalc: function() {
-            let keys = Object.keys(this.refreshDataInCalc);
-            for(let i = 0; i < keys.length; i++) {
-                this.orderCalcData.set(keys[i], this.refreshDataInCalc[keys[i]]);
-                this[keys[i]] = this.orderCalcData.get(keys[i]);
-            }
-            this.filledOrderData = sessionStorage.getItem('current-tab');
-        }, 
-
-        pageIndx: function() {
-            if(this.pageIndx < this.filledOrderData) {
-                if(this.pageIndx < 2) {
-                    sessionStorage.removeItem('color');
-                    sessionStorage.removeItem('tariff');
-                    sessionStorage.removeItem('services');
-                    sessionStorage.removeItem('checked-services');
-                    sessionStorage.removeItem('duration');
-
-                    this.orderCalcData.delete('color');
-                    this.orderCalcData.delete('tariff');
-                    this.orderCalcData.delete('services');
-                    this.orderCalcData.delete('duration');
-                }
-                this.filledOrderData = sessionStorage.getItem('current-tab');
-            }
         }
     },
 
@@ -152,6 +124,40 @@ export default {
         if(tariff) this.tariff = tariff;
         if(services) this.services = services.split(',');
         if(duration) this.duration = duration;
+    },
+
+    watch: {
+        refreshDataInCalc: function() {
+            let keys = Object.keys(this.refreshDataInCalc);
+            for(let i = 0; i < keys.length; i++) {
+                this.orderCalcData.set(keys[i], this.refreshDataInCalc[keys[i]]);
+                this[keys[i]] = this.orderCalcData.get(keys[i]);
+            }
+            this.filledOrderData = sessionStorage.getItem('current-tab');
+        }, 
+
+        calcPrice: function() {
+            this.orderCalcData.set('price', this.calcPrice.price);
+            this.price = this.orderCalcData.get('price');
+        },
+
+        pageIndx: function() {
+            if(this.pageIndx < this.filledOrderData) {
+                if(this.pageIndx < 2) {
+                    sessionStorage.removeItem('color');
+                    sessionStorage.removeItem('tariff');
+                    sessionStorage.removeItem('services');
+                    sessionStorage.removeItem('checked-services');
+                    sessionStorage.removeItem('duration');
+
+                    this.orderCalcData.delete('color');
+                    this.orderCalcData.delete('tariff');
+                    this.orderCalcData.delete('services');
+                    this.orderCalcData.delete('duration');
+                }
+                this.filledOrderData = sessionStorage.getItem('current-tab');
+            }
+        }
     },
 
     methods: {

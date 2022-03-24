@@ -14,13 +14,14 @@
                 @selectedTabIndx='choiceComponent'
             />
             <div class="order-info" >
-                <keep-alive><component @componentData="addNewDataInCalcBlock" @componentChanged="reloadPageData" :is="selectedComponent"></component></keep-alive>
+                <keep-alive><component :is="selectedComponent" :newColors="newColors" :modelChanged="modelChanged" @finalPrice="addPrice" @componentData="addNewDataInCalcBlock" @componentChanged="reloadPageData"></component></keep-alive>
                 <order-calc 
                     :pageIndx="componentIndx"
                     :activateButton="activateButton"
                     @nextPage="choiceComponent" 
                     @confirmOrder="confirmOrder = true"
                     :refreshDataInCalc="refreshDataInCalc"
+                    :calcPrice="calcPrice"
                 />
             </div>
         </div>
@@ -68,7 +69,10 @@ export default {
             componentIndx: 0,
             confirmOrder: false,
             refreshDataInCalc: {},
-            activateButton: false
+            activateButton: false,
+            newColors: [],
+            calcPrice: {},
+            modelChanged: 0
         }
     },
 
@@ -95,12 +99,18 @@ export default {
             }
         },
 
-        reloadPageData() {
+        reloadPageData(colors) {
             this.activateButton = true;
+            this.newColors = colors;
+            this.modelChanged++;
         },
 
         addNewDataInCalcBlock(data) {
             this.refreshDataInCalc = data;
+        },
+
+        addPrice(price) {
+            this.calcPrice = price;
         }
     },
 }
