@@ -13,7 +13,8 @@
     "curl": "^0.1.4",
     "vue": "^3.0.0",
     "vue-axios": "^3.4.1",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vue-yandex-maps": "^0.12.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

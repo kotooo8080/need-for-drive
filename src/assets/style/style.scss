@@ -744,6 +744,18 @@ input[type=checkbox]:checked {
         margin: 40px 0px 16px 0px;
     }
 
+    #order-map {
+        .map {
+            margin-top: 0;
+            height: 352px;
+            width: 736px;
+        }
+
+        .place-mark {
+            color: $main-color;
+        }
+    }
+
     input {
         height: 24px;
         width: 214px;
