@@ -46,14 +46,6 @@ export default {
 
     data() {
         return {
-            // cards: [
-            //     { id: 'card1', model: 'ELANTRA', price: '12 000 - 25 000 ₽', photo: 'img1.jpg' },
-            //     { id: 'card2', model: 'i30 N', price: '10 000 - 32 000 ₽', photo: 'img2.jpg' },
-            //     { id: 'card3', model: 'CRETA', price: '12 000 - 25 000 ₽', photo: 'img3.jpg' },
-            //     { id: 'card4', model: 'SONATA', price: '10 000 - 32 000 ₽', photo: 'img4.jpg' },
-            //     { id: 'card5', model: 'ELANTRA', price: '12 000 - 25 000 ₽', photo: 'img1.jpg' },
-            //     { id: 'card6', model: 'i30 N', price: '10 000 - 32 000 ₽', photo: 'img2.jpg' },
-            // ],
             activeModels: 'Все',
             activeCard: -1,
             listOfCars: [],
@@ -73,13 +65,18 @@ export default {
 
     methods: {
         choiceCar(carIndex) {
+            let carsList = this.filteredCars.length == 0 ? this.listOfCars : this.filteredCars;
             this.activeCard = carIndex;
-            sessionStorage.setItem('car-model', this.listOfCars[carIndex].name);
+
+            sessionStorage.setItem('car-model', carsList[carIndex].name);
             sessionStorage.setItem('car-index', carIndex);
-            sessionStorage.setItem('car-price', this.listOfCars[carIndex].priceMin + ' - ' + this.listOfCars[carIndex].priceMax + '₽');
+            sessionStorage.setItem('car-price', carsList[carIndex].priceMin + ' - ' + carsList[carIndex].priceMax + '₽');
             sessionStorage.setItem('current-tab', 1);
-            this.$emit('componentData', { model: this.listOfCars[carIndex].name, price: this.listOfCars[carIndex].priceMin + ' - ' + this.listOfCars[carIndex].priceMax + '₽' });
-            this.$emit('componentChanged');
+            sessionStorage.setItem('car-colors', carsList[carIndex].colors);
+            sessionStorage.setItem('car-id', carsList[carIndex].id)
+
+            this.$emit('componentData', { model: carsList[carIndex].name, price: carsList[carIndex].priceMin + ' - ' + carsList[carIndex].priceMax + '₽' });
+            this.$emit('componentChanged', carsList[carIndex].colors);
         },
 
         fillClassesFromServer() {
@@ -95,6 +92,11 @@ export default {
             } else {
                 this.filteredCars = [];
             }
+
+            let carsList = this.filteredCars.length == 0 ? this.listOfCars : this.filteredCars;
+            this.activeCard = 0;
+            this.$emit('componentData', { model: carsList[0].name, price: carsList[0].priceMin + ' - ' + carsList[0].priceMax + '₽' });
+            this.$emit('componentChanged', carsList[0].colors);
         },
 
         getList() {
