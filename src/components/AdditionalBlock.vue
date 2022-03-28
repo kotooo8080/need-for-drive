@@ -66,7 +66,7 @@
                     type="radio"  
                     name="radio" 
                     :value=tariff.name 
-                    @change="saveAdditionalData('tariff', tariff.description, tariff.name)" 
+                    @change="saveAdditionalData('tariff', tariff.description, tariff.name, tariff.id)" 
                 >
                 <label 
                     :for=tariff.name
@@ -134,8 +134,8 @@ export default {
             ],
 
             tariffs: [
-                { name: 'tar0', description: 'Поминутно', tarPrice: '7', timeValue: 'мин' },
-                { name: 'tar1', description: 'На сутки', tarPrice: '1999', timeValue: 'сутки' }
+                { id: 'tar0', name: 'tar0', description: 'Поминутно', tarPrice: '7', timeValue: 'мин' },
+                { id: 'tar1', name: 'tar1', description: 'На сутки', tarPrice: '1999', timeValue: 'сутки' }
             ],
 
             services: [
@@ -206,7 +206,7 @@ export default {
                     this.tariffs = [];
                     receivedRates.forEach((el, indx) => {
                         if(receivedRates[indx].rateTypeId) {
-                            this.tariffs[indx] = { name: 'tar' + indx, description: receivedRates[indx].rateTypeId.name, tarPrice: receivedRates[indx].price, timeValue: receivedRates[indx].rateTypeId.unit };
+                            this.tariffs[indx] = { id: receivedRates[indx].id, name: 'tar' + indx, description: receivedRates[indx].rateTypeId.name, tarPrice: receivedRates[indx].price, timeValue: receivedRates[indx].rateTypeId.unit };
                         }
                     });
                 }
@@ -254,9 +254,12 @@ export default {
             return (this.checkedServices.indexOf(servName) + 1);
         },
 
-        saveAdditionalData(dataName, dataValue, dataEngVal) {
+        saveAdditionalData(dataName, dataValue, dataEngVal, dataId) {
             if(dataName === 'color' || dataName === 'tariff') {
                 sessionStorage.setItem(`active-${dataName}`, dataEngVal);
+                if(dataName === 'tariff') {
+                    sessionStorage.setItem(`active-tariff-id`, dataId );
+                }
             }
             if(dataName === 'service') {
                 let servData = {};
