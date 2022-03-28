@@ -1,54 +1,32 @@
 <template>
     <div class="car-model">
         <div class="options">
-            <div>
+            <div
+                v-for="carClass in classes"
+                :key=carClass
+            >
                 <input 
-                    id="all"
-                    v-model="activeModels"
-                    type="radio"  
-                    name="radio" 
-                    value="all"  
-                    checked>
-                <label 
-                    for="all"
-                    :class="{ 'active-label': activeModels === 'all' }" 
-                >Все модели</label>
-            </div>
-            <div>
-                <input 
-                    id="cheap"
-                    v-model="activeModels"
-                    type="radio"  
-                    name="radio" 
-                    value="cheap" 
-                >
-                <label 
-                    for="cheap"
-                    :class="{ 'active-label': activeModels === 'cheap' }" 
-                >Эконом</label>
-            </div>
-            <div>
-                <input 
-                    id="premium" 
+                    :id=carClass
                     v-model="activeModels"
                     type="radio" 
                     name="radio" 
-                    value="premium" 
+                    :value=carClass
+                    @click="filterCars(carClass)"
                 >
                 <label  
-                    for="premium"
-                    :class="{ 'active-label': activeModels === 'premium' }"
-                >Премиум</label>
+                    :for=carClass
+                    :class="{ 'active-label': activeModels === carClass }" 
+                >{{ carClass }}</label>
             </div>
         </div>
         <div class="products">
             <product-card
-                v-for="(card, indx) in cards" 
-                :key=card.id
+                v-for="(card, indx) in (filteredCars.length == 0 ? listOfCars : filteredCars) " 
+                :key=indx
                 tag="a"
-                :model="card.model"
-                :price="card.price"
-                :photo="card.photo"
+                :model="card.name"
+                :price="card.priceMin + ' - ' + card.priceMax + '₽'"
+                :photo="card.thumbnail.path"
                 :class="{ 'active-car': activeCard === indx }"
                 @click="choiceCar(indx)"
             />
@@ -68,16 +46,19 @@ export default {
 
     data() {
         return {
-            cards: [
-                { id: 'card1', model: 'ELANTRA', price: '12 000 - 25 000 ₽', photo: 'img1.jpg' },
-                { id: 'card2', model: 'i30 N', price: '10 000 - 32 000 ₽', photo: 'img2.jpg' },
-                { id: 'card3', model: 'CRETA', price: '12 000 - 25 000 ₽', photo: 'img3.jpg' },
-                { id: 'card4', model: 'SONATA', price: '10 000 - 32 000 ₽', photo: 'img4.jpg' },
-                { id: 'card5', model: 'ELANTRA', price: '12 000 - 25 000 ₽', photo: 'img1.jpg' },
-                { id: 'card6', model: 'i30 N', price: '10 000 - 32 000 ₽', photo: 'img2.jpg' },
-            ],
-            activeModels: 'all',
-            activeCard: -1
+            // cards: [
+            //     { id: 'card1', model: 'ELANTRA', price: '12 000 - 25 000 ₽', photo: 'img1.jpg' },
+            //     { id: 'card2', model: 'i30 N', price: '10 000 - 32 000 ₽', photo: 'img2.jpg' },
+            //     { id: 'card3', model: 'CRETA', price: '12 000 - 25 000 ₽', photo: 'img3.jpg' },
+            //     { id: 'card4', model: 'SONATA', price: '10 000 - 32 000 ₽', photo: 'img4.jpg' },
+            //     { id: 'card5', model: 'ELANTRA', price: '12 000 - 25 000 ₽', photo: 'img1.jpg' },
+            //     { id: 'card6', model: 'i30 N', price: '10 000 - 32 000 ₽', photo: 'img2.jpg' },
+            // ],
+            activeModels: 'Все',
+            activeCard: -1,
+            listOfCars: [],
+            classes: new Set(),
+            filteredCars: []
         }
     },
 
@@ -86,18 +67,46 @@ export default {
         if(index) {
             this.activeCard = Number(index);
         }
+
+        this.getList();
     },
 
     methods: {
         choiceCar(carIndex) {
             this.activeCard = carIndex;
-            sessionStorage.setItem('car-model', 'Hyndai, ' + this.cards[carIndex].model);
+            sessionStorage.setItem('car-model', this.listOfCars[carIndex].name);
             sessionStorage.setItem('car-index', carIndex);
-            sessionStorage.setItem('car-price', this.cards[carIndex].price);
+            sessionStorage.setItem('car-price', this.listOfCars[carIndex].priceMin + ' - ' + this.listOfCars[carIndex].priceMax + '₽');
             sessionStorage.setItem('current-tab', 1);
-            this.$emit('componentData', { model: 'Hyndai, ' + this.cards[carIndex].model, price: this.cards[carIndex].price });
+            this.$emit('componentData', { model: this.listOfCars[carIndex].name, price: this.listOfCars[carIndex].priceMin + ' - ' + this.listOfCars[carIndex].priceMax + '₽' });
             this.$emit('componentChanged');
         },
+
+        fillClassesFromServer() {
+            this.classes.add('Все');
+            this.listOfCars.forEach(el => {
+                this.classes.add(el.categoryId.name);
+            });
+        },
+
+        filterCars(categoryName) {
+            if(categoryName !== 'Все') {
+                this.filteredCars = this.listOfCars.filter(el => el.categoryId.name === categoryName);
+            } else {
+                this.filteredCars = [];
+            }
+        },
+
+        getList() {
+            this.axios.get('https://api-factory.simbirsoft1.com/api/db/car', {
+                headers: {
+                    'X-Api-Factory-Application-Id': '5e25c641099b810b946c5d5b'
+                }
+            }).then((response) => {
+                this.listOfCars = response.data.data;
+                this.fillClassesFromServer();
+            });
+        }
     },
 }
 </script>
