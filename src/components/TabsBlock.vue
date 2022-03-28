@@ -25,6 +25,10 @@
 export default {
     name: 'TabsBlock',
 
+    props: {
+        pageIndx: Number
+    },
+
     data() {
         return {
             tabs: [
@@ -33,25 +37,25 @@ export default {
                 { id: 'tab-add', name: 'Дополнительно' },
                 { id: 'tab-total', name: 'Итого' }
             ],
-            selectedTab: 'Местоположение',
+            selectedTab: 0,
         }
     },
-
-    props: {
-        pageIndx: Number
-    },
-    
-    methods: {
-        selectTab(indx) {
-            this.selectedTab = this.tabs[indx];
-            this.$emit('selectedTabIndx', { index: indx });
-        }
-    }, 
 
     watch: {
         pageIndx: function() {
             this.selectedTab = this.pageIndx;
         }
-    }
+    },
+
+    created() {
+        this.selectedTab = this.pageIndx;
+    },
+    
+    methods: {
+        selectTab(indx) {
+            this.selectedTab = this.pageIndx;
+            this.$emit('selectedTabIndx', { index: indx });
+        }
+    }, 
 }
 </script>

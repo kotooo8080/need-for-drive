@@ -14,11 +14,13 @@
                 @selectedTabIndx='choiceComponent'
             />
             <div class="order-info" >
-                <keep-alive><component :is="selectedComponent"></component></keep-alive>
+                <keep-alive><component @componentData="addNewDataInCalcBlock" @componentChanged="reloadPageData" :is="selectedComponent"></component></keep-alive>
                 <order-calc 
                     :pageIndx="componentIndx"
+                    :activateButton="activateButton"
                     @nextPage="choiceComponent" 
                     @confirmOrder="confirmOrder = true"
+                    :refreshDataInCalc="refreshDataInCalc"
                 />
             </div>
         </div>
@@ -50,7 +52,7 @@ export default {
         CarModel,
         AdditionalBlock,
         TotalBlock,
-        ConfirmationWindow
+        ConfirmationWindow,
     },
 
     data() {
@@ -64,7 +66,17 @@ export default {
                 "TotalBlock"
             ],
             componentIndx: 0,
-            confirmOrder: false
+            confirmOrder: false,
+            refreshDataInCalc: {},
+            activateButton: false
+        }
+    },
+
+    created() {
+        let lastEditedComponent = sessionStorage.getItem('current-tab');
+        if(null !== lastEditedComponent) {
+            this.componentIndx = Number(lastEditedComponent);
+            this.selectedComponent = this.componentsNames[lastEditedComponent];
         }
     },
 
@@ -74,12 +86,22 @@ export default {
         },
 
         choiceComponent(data) {
-            this.selectedComponent = this.componentsNames[data.index];
-            
-            if(data) {
-                this.componentIndx = data.index;
+            if((this.componentIndx + 1 >= data.index || data.index == Number(sessionStorage.getItem('current-tab'))) && sessionStorage.getItem('current-tab') !== null && Number(sessionStorage.getItem('current-tab')) + 1 >= data.index) {
+                this.selectedComponent = this.componentsNames[data.index];
+                if(data) {
+                    this.componentIndx = data.index;
+                }
+                this.activateButton = false;
             }
         },
+
+        reloadPageData() {
+            this.activateButton = true;
+        },
+
+        addNewDataInCalcBlock(data) {
+            this.refreshDataInCalc = data;
+        }
     },
 }
 </script>

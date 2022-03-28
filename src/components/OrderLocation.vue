@@ -17,8 +17,6 @@
             <input 
                 v-model="pointName" 
                 type="text" 
-                @focus="pointName = ''" 
-                @focusout="poinOfIssueValChecker"
             >
         </div>
         <p class="map">Выбрать на карте:</p>
@@ -27,23 +25,44 @@
 </template>
 
 <script>
-
 export default {
     name: 'OrderLocation',
 
     data() {
         return {
             locationName: "Ульяновск",
-            pointName: "Начните вводить пункт ..."
+            pointName: ""
         }
     },
 
-    methods: {
-        poinOfIssueValChecker() {
-            if(this.pointName == '') {
-                this.pointName = "Начните вводить пункт ...";
-            }
+    watch: {
+        locationName: function() {
+            this.saveOrderData('city', this.locationName);
         },
-    }
+
+        pointName: function() {
+            this.saveOrderData('point', this.pointName);
+        }
+    },
+
+    created() {
+        let city = sessionStorage.getItem('city');
+        let point = sessionStorage.getItem('point');
+        
+        if(city) this.locationName = city;
+        if(point) this.pointName = point;
+    },
+
+    methods: {
+        saveOrderData(dataName, dataValue) {
+            sessionStorage.setItem(dataName, dataValue);
+            this.$emit('componentData', { [dataName]: dataValue });
+
+            if(this.locationName && this.pointName) {
+                sessionStorage.setItem('current-tab', 0);
+                this.$emit('componentChanged');
+            }
+        }
+    },
 }
 </script>

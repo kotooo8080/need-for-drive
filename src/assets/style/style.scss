@@ -827,7 +827,11 @@ input[type=checkbox]:checked {
             cursor: url('../img/pointer.svg'), crosshair;
         }
 
-        .product-card:active {
+        .active-car {
+            border: 1px solid $main-color;
+        }
+
+        .active-car:hover {
             border: 1px solid $main-color;
         }
     }
@@ -968,6 +972,10 @@ input[type=checkbox]:checked {
                 .close:after {
                     transform: rotate(-45deg);
                 }
+
+                .not-valid {
+                    border-bottom: 2px solid #FF0000;
+                }
             }
 
             h3 {
@@ -1012,7 +1020,7 @@ input[type=checkbox]:checked {
             justify-content: space-between;
 
             input {
-                color: $gray;
+                //color: $gray;
             }
 
             h3 {
@@ -1151,7 +1159,7 @@ input[type=checkbox]:checked {
         }
 
         .item-value {
-            flex-basis: 100px;
+            flex-basis: content;
             text-align: end;
         }
 

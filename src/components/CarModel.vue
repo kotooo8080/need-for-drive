@@ -49,7 +49,8 @@
                 :model="card.model"
                 :price="card.price"
                 :photo="card.photo"
-                @buyButtonClick = "buy(indx)"
+                :class="{ 'active-car': activeCard === indx }"
+                @click="choiceCar(indx)"
             />
         </div>
     </div>
@@ -75,8 +76,28 @@ export default {
                 { id: 'card5', model: 'ELANTRA', price: '12 000 - 25 000 ₽', photo: 'img1.jpg' },
                 { id: 'card6', model: 'i30 N', price: '10 000 - 32 000 ₽', photo: 'img2.jpg' },
             ],
-            activeModels: 'all'
+            activeModels: 'all',
+            activeCard: -1
         }
+    },
+
+    created() {
+        let index = sessionStorage.getItem('car-index');
+        if(index) {
+            this.activeCard = Number(index);
+        }
+    },
+
+    methods: {
+        choiceCar(carIndex) {
+            this.activeCard = carIndex;
+            sessionStorage.setItem('car-model', 'Hyndai, ' + this.cards[carIndex].model);
+            sessionStorage.setItem('car-index', carIndex);
+            sessionStorage.setItem('car-price', this.cards[carIndex].price);
+            sessionStorage.setItem('current-tab', 1);
+            this.$emit('componentData', { model: 'Hyndai, ' + this.cards[carIndex].model, price: this.cards[carIndex].price });
+            this.$emit('componentChanged');
+        },
     },
 }
 </script>

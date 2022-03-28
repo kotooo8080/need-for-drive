@@ -19,6 +19,7 @@ import SliderBlock from '../components/SliderBlock.vue'
 
 export default {
     name: 'MainPage',
+    
     components: {
         MenuBlock,
         InfoBlock,
