@@ -90,7 +90,10 @@ export default {
         },
 
         choiceComponent(data) {
-            if((this.componentIndx + 1 >= data.index || data.index == Number(sessionStorage.getItem('current-tab'))) && sessionStorage.getItem('current-tab') !== null && Number(sessionStorage.getItem('current-tab')) + 1 >= data.index) {
+            if((this.componentIndx + 1 >= data.index 
+                || data.index == Number(sessionStorage.getItem('current-tab'))) 
+                && sessionStorage.getItem('current-tab') !== null 
+                && Number(sessionStorage.getItem('current-tab')) + 1 >= data.index) {
                 this.selectedComponent = this.componentsNames[data.index];
                 if(data) {
                     this.componentIndx = data.index;

@@ -44,7 +44,7 @@ export default {
         getStatuses() {
             this.axios.get('https://api-factory.simbirsoft1.com/api/db/orderStatus', {
                 headers: {
-                    'X-Api-Factory-Application-Id': '5e25c641099b810b946c5d5b'
+                    'X-Api-Factory-Application-Id': process.env.VUE_APP_APPLICATION_ID
                 }
             }).then((response) => {
                 this.listOfStatuses = response.data.data;
@@ -63,7 +63,7 @@ export default {
                 method: 'post',
                 url: 'https://api-factory.simbirsoft1.com/api/db/order',
                 headers: {
-                    'X-Api-Factory-Application-Id': '5e25c641099b810b946c5d5b',
+                    'X-Api-Factory-Application-Id': process.env.VUE_APP_APPLICATION_ID,
                     "Content-type": "application/json; charset=UTF-8"
                 },
                 data: {

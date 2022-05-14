@@ -303,7 +303,7 @@ export default {
                 let arrD = date.split(".");
                 arrD[1] -= 1;
                 let d = new Date(arrD[2], arrD[1], arrD[0]);
-                //if (!((d.getFullYear() == arrD[2]) && (d.getMonth() == arrD[1]) && (d.getDate() == arrD[0]) && arrD[2] >= (new Date()).getFullYear() && arrD[1] >= (new Date()).getMonth() && arrD[0] >= (new Date()).getDate())) {
+    
                 if(!((d.getFullYear() == arrD[2]) && (d.getMonth() >= arrD[1])) && (d.getFullYear() < arrD[2])) {
                     this.inputNameCheck(startOrEnd, true);
                 } else {

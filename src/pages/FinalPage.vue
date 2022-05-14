@@ -65,7 +65,7 @@ export default {
         getOrderData() {
             this.axios.get('https://api-factory.simbirsoft1.com/api/db/order/' + this.orderId, {
                 headers: {
-                    'X-Api-Factory-Application-Id': '5e25c641099b810b946c5d5b'
+                    'X-Api-Factory-Application-Id': process.env.VUE_APP_APPLICATION_ID
                 }
             }).then((response) => {
                 let responseData = response.data.data;

@@ -26,7 +26,6 @@
             :cityFind="cityFind"
             :locationName="locationName"
         />
-        <!-- <iframe class="map-iframe" src="https://yandex.ru/map-widget/v1/?um=constructor%3Ae20e0670f1205c3160e4aa6d276e6a89b7ba0ff7abb0bd6c9b580dcdde006c3f&amp;source=constructor" width="736" height="352" frameborder="0"></iframe> -->
     </div>
 </template>
 <script>
@@ -69,7 +68,7 @@ export default {
         getCities() {
             this.axios.get('https://api-factory.simbirsoft1.com/api/db/city', {
                 headers: {
-                    'X-Api-Factory-Application-Id': '5e25c641099b810b946c5d5b'
+                    'X-Api-Factory-Application-Id': process.env.VUE_APP_APPLICATION_ID
                 }
             }).then((response) => {
                 this.listOfCities = response.data.data;
@@ -79,7 +78,7 @@ export default {
         getPoints() {
             this.axios.get('https://api-factory.simbirsoft1.com/api/db/point', {
                 headers: {
-                    'X-Api-Factory-Application-Id': '5e25c641099b810b946c5d5b'
+                    'X-Api-Factory-Application-Id': process.env.VUE_APP_APPLICATION_ID
                 }
             }).then((response) => {
                 this.listOfPoints = response.data.data;

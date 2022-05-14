@@ -102,7 +102,7 @@ export default {
         getList() {
             this.axios.get('https://api-factory.simbirsoft1.com/api/db/car', {
                 headers: {
-                    'X-Api-Factory-Application-Id': '5e25c641099b810b946c5d5b'
+                    'X-Api-Factory-Application-Id': process.env.VUE_APP_APPLICATION_ID
                 }
             }).then((response) => {
                 this.listOfCars = response.data.data;
