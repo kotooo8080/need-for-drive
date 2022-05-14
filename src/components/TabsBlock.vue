@@ -1,6 +1,6 @@
 <template>
     <div class="tabs-block">
-        <div class="tabs">
+        <div class="tabs">   
             <ul>
                 <span 
                     v-for="(tab, indx) in tabs" 
@@ -21,7 +21,6 @@
 </template>
 
 <script>
-
 export default {
     name: 'TabsBlock',
 
