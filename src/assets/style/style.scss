@@ -1645,6 +1645,13 @@ input[type=checkbox]:checked {
                 .map {
                     margin-top: 32px;
                 }
+
+                #order-map {
+                    .map {
+                        height: 352px;
+                        width: 100%;
+                    }
+                }
             }
 
             .page-header {
