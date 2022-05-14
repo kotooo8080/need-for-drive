@@ -42,7 +42,7 @@ export default {
         return {
             map: {
                 settings: {
-                    apiKey: 'c2c4071b-d021-4337-bfb4-d817f3d49601',
+                    apiKey: process.env.VUE_APP_MAP_API_KEY,
                     lang: 'ru_RU',
                     coordorder: 'latlong',
                     version: '2.1'
@@ -59,7 +59,7 @@ export default {
     },
     methods: {
         async getCoords(place) {
-            let promise = this.axios.get('https://geocode-maps.yandex.ru/1.x/?format=json&apikey=c2c4071b-d021-4337-bfb4-d817f3d49601&geocode=' + place)
+            let promise = this.axios.get(`https://geocode-maps.yandex.ru/1.x/?format=json&apikey=${this.map.settings.apiKey}&geocode=${place}`)
             .then((res) => {
                 this.placeCoords = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos;
                 this.placeCoordsValue = [ this.placeCoords.split(' ')[1], this.placeCoords.split(' ')[0] ];
